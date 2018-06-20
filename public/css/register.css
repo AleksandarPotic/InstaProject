@@ -1,0 +1,25 @@
+body {
+			background-color: #f2f2f2;
+		}
+		.radius {
+			border-radius: 0px;
+		}
+		#row-mag {
+			margin-top: 80px;
+		}
+		#mag-footer {
+			margin-top: 80px;
+			margin-bottom: 20px;
+		}
+		@media only screen and (max-width: 1000px) {
+			#image-div {
+				display: none;
+			}
+			#row-mag {
+				margin-top: 5px;
+			}
+			#mag-footer {
+				margin-top: 5px;
+				margin-bottom: 20px;
+			}
+		}

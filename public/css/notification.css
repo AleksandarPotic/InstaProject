@@ -1,0 +1,62 @@
+body {
+	background-color: #f2f2f2;
+}
+#not-all {
+	margin-top: 120px;
+}
+#not-div {
+	background-color: white;
+	border: 1px solid lightgray;
+}
+.not-logo {
+	width: 70px;
+	height: 70px;
+	border-radius: 50%;
+}
+.not-nick-name {
+	font-size: 20px;
+	font-weight: bold;
+}
+.not-time {
+	color: gray;
+}
+.not-img {
+	width: 100%;
+	height: 70px;
+	margin-top: -20px;
+}
+.btn-not {
+	margin-top: 20px;
+}
+.btn-text {
+	margin-top: 20px;
+}
+@media only screen and (max-width: 400px) {
+	.not-logo {
+		width: 45px;
+		height: 45px;
+		border-radius: 50%;
+	}
+	.not-nick-name {
+		font-size: 15px;
+		font-weight: bold;
+	}
+	.not-time {
+		color: gray;
+		font-size: 13px;
+	}
+	.text-not {
+		font-size: 13px;
+	}
+	.btn-not {
+		margin-top: 0px;
+	}
+	.btn-text {
+		margin-top: 0px;
+	}
+	.not-img {
+		width: 100%;
+		height: 60px;
+		margin-top: -5px;
+	}
+}

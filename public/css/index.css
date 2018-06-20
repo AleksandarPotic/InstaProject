@@ -1,0 +1,88 @@
+body {
+		background-color: #f2f2f2;
+	}
+.ico-ma {
+	margin-left: 20px;
+}
+.vue_class {
+	color: #ff3f3f;
+}
+#post-all {
+	margin-top: 120px;
+}
+.desc-nav {
+	display: block;
+}
+.desc-nav-2 {
+	display: none;
+}
+.ico-ma-2 {
+	margin-left: 20px;
+	color: white;
+}
+.display_none {
+	display: none;
+}
+.radius {
+	border-radius: 0px;
+}
+.post-c {
+	border: 1px solid #e0e0e0;
+	background-color: white;
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+.logo-post {
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+}
+.post-user {
+	margin-top: 10px;
+}
+.post-img {
+	margin-top: 10px;
+	height: 500px;
+	width: 100%;
+}
+.post-lk {
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+.hrt-1 {
+	font-size: 30px;
+	cursor: pointer;
+}
+.com {
+	margin-left: 10px;
+	font-size: 30px;
+	cursor: pointer;
+}
+.hrt-2 {
+	font-size: 30px;
+	color: #ff3f3f;
+	cursor: pointer;
+}
+.com-mg {
+	margin-top: -3px;
+}
+.commentar {
+	border: none;
+}
+
+@media only screen and (max-width: 570px) {
+	.desc-nav {
+		display: none;
+	}
+	.desc-nav-2 {
+		display: block;
+	}	
+	.post-img {
+		height: 350px;
+	}
+}
+@media only screen and (max-width: 400px) {
+	.post-img {
+		height: 250px;
+	}
+}
