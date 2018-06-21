@@ -54372,7 +54372,7 @@ if (false) {
 var disposed = false
 var normalizeComponent = __webpack_require__(0)
 /* script */
-var __vue_script__ = null
+var __vue_script__ = __webpack_require__(83)
 /* template */
 var __vue_template__ = __webpack_require__(77)
 /* template functional */
@@ -54461,7 +54461,131 @@ var render = function() {
             1
           ),
           _vm._v(" "),
-          _vm._m(0),
+          _c("form", { staticClass: "form-inline col-lg-3 col-md-3" }, [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.search,
+                  expression: "search"
+                }
+              ],
+              staticClass: "form-control radius",
+              staticStyle: {
+                "padding-right": "50px",
+                "margin-left": "70px",
+                color: "gray",
+                "font-weight": "bold"
+              },
+              attrs: {
+                type: "text",
+                placeholder: "Search",
+                "aria-label": "Search"
+              },
+              domProps: { value: _vm.search },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.search = $event.target.value
+                }
+              }
+            }),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                class:
+                  _vm.search === "" ? "col-lg-11 display_none" : "col-lg-11",
+                attrs: { id: "header_search" }
+              },
+              [
+                _vm._l(_vm.filteredUsers, function(user) {
+                  return [
+                    _vm.auth_user_id == user.id
+                      ? [
+                          _c(
+                            "router-link",
+                            {
+                              staticClass: "list_users",
+                              attrs: { to: "/profile" }
+                            },
+                            [
+                              _c(
+                                "div",
+                                {
+                                  staticClass: "razmak",
+                                  on: {
+                                    click: function($event) {
+                                      _vm.SearchNone()
+                                    }
+                                  }
+                                },
+                                [
+                                  _c("img", {
+                                    staticClass: "logo-post",
+                                    attrs: {
+                                      src:
+                                        "http://localhost:8000/user/images/user-logo.jpg"
+                                    }
+                                  }),
+                                  _vm._v(
+                                    " " +
+                                      _vm._s(user.nick_name) +
+                                      "\n\t\t\t\t\t\t\t\t"
+                                  )
+                                ]
+                              )
+                            ]
+                          )
+                        ]
+                      : [
+                          _c(
+                            "router-link",
+                            {
+                              staticClass: "list_users",
+                              attrs: {
+                                to:
+                                  "/friends/" + user.id + "/" + _vm.auth_user_id
+                              }
+                            },
+                            [
+                              _c(
+                                "div",
+                                {
+                                  staticClass: "razmak",
+                                  on: {
+                                    click: function($event) {
+                                      _vm.SearchNone()
+                                    }
+                                  }
+                                },
+                                [
+                                  _c("img", {
+                                    staticClass: "logo-post",
+                                    attrs: {
+                                      src:
+                                        "http://localhost:8000/user/images/user-logo.jpg"
+                                    }
+                                  }),
+                                  _vm._v(
+                                    " " +
+                                      _vm._s(user.nick_name) +
+                                      "\n\t\t\t\t\t\t\t\t"
+                                  )
+                                ]
+                              )
+                            ]
+                          )
+                        ]
+                  ]
+                })
+              ],
+              2
+            )
+          ]),
           _vm._v(" "),
           _c(
             "div",
@@ -54586,30 +54710,13 @@ var render = function() {
             1
           ),
           _vm._v(" "),
-          _vm._m(1)
+          _vm._m(0)
         ]
       )
     ])
   ])
 }
 var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("form", { staticClass: "form-inline col-lg-3 col-md-3" }, [
-      _c("input", {
-        staticClass: "form-control radius",
-        staticStyle: {
-          "padding-right": "50px",
-          "margin-left": "70px",
-          color: "gray",
-          "font-weight": "bold"
-        },
-        attrs: { type: "text", placeholder: "Search", "aria-label": "Search" }
-      })
-    ])
-  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -54648,6 +54755,116 @@ if (false) {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 79 */,
+/* 80 */,
+/* 81 */,
+/* 82 */,
+/* 83 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    data: function data() {
+        return {
+            users: [],
+            search: ''
+        };
+    },
+
+    props: {
+        auth_user_id: Number
+    },
+
+    created: function created() {
+        this.fetchUsers();
+    },
+
+    methods: {
+        fetchUsers: function fetchUsers() {
+            var _this = this;
+
+            fetch('http://localhost:8000/api/users').then(function (response) {
+                return response.json();
+            }).then(function (response) {
+                _this.users = response.data;
+            });
+        },
+        SearchNone: function SearchNone() {
+            this.search = '';
+        }
+    },
+    computed: {
+        filteredUsers: function filteredUsers() {
+            var _this2 = this;
+
+            return this.users.filter(function (user) {
+                return user.nick_name.match(_this2.search);
+            });
+        }
+    }
+});
 
 /***/ })
 /******/ ]);

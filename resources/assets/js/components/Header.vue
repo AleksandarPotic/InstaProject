@@ -8,7 +8,25 @@
 				</router-link>
 
 			    <form class="form-inline col-lg-3 col-md-3">
-			      <input class="form-control radius" type="text" placeholder="Search" aria-label="Search" style="padding-right: 50px; margin-left: 70px; color: gray; font-weight: bold;">
+			      <input class="form-control radius" type="text" v-model="search" placeholder="Search" aria-label="Search" style="padding-right: 50px; margin-left: 70px; color: gray; font-weight: bold;">
+					<div id="header_search" :class="search === '' ? 'col-lg-11 display_none' : 'col-lg-11' ">
+						<template v-for="user in filteredUsers">
+							<template v-if="auth_user_id == user.id">
+								<router-link to="/profile" class="list_users">
+									<div class="razmak" @click="SearchNone()">
+										<img class="logo-post" src="http://localhost:8000/user/images/user-logo.jpg"> {{ user.nick_name }}
+									</div>
+								</router-link>
+							</template>
+							<template v-else>
+								<router-link :to="'/friends/'+user.id+'/'+auth_user_id" class="list_users">
+									<div class="razmak" @click="SearchNone()">
+										<img class="logo-post" src="http://localhost:8000/user/images/user-logo.jpg"> {{ user.nick_name }}
+									</div>
+								</router-link>
+							</template>
+						</template>
+					</div>
 			    </form>
 			    <div class="col-md-3 text-right">
 			    	<router-link to="/messanger"><span class="ico-ma-2"><i class="fas fa-envelope" style="font-size:30px"></i></span></router-link>
@@ -37,3 +55,40 @@
 		</div>
 	</div>
 </template>
+
+<script>
+	export default {
+	    data() {
+            return {
+                users: [],
+                search: ''
+            }
+		},
+		props: {
+            auth_user_id: Number
+		},
+
+        created(){
+            this.fetchUsers();
+        },
+        methods: {
+            fetchUsers() {
+                fetch('http://localhost:8000/api/users')
+                    .then(response => response.json())
+                    .then(response => {
+                        this.users = response.data;
+                    })
+            },
+            SearchNone() {
+                this.search = '';
+			}
+        },
+		computed: {
+	        filteredUsers: function () {
+				return this.users.filter((user) => {
+				    return user.nick_name.match(this.search);
+				});
+            }
+		}
+	}
+</script>

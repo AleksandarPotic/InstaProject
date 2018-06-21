@@ -7,7 +7,7 @@
 <body>
 
 <div id="app">
-	<MyHeader></MyHeader>
+	<MyHeader :auth_user_id="{{ Auth::user()->id }}"></MyHeader>
 
 	<router-view :auth_user_id="{{ Auth::user()->id }}" :auth_user="{{ Auth::user() }}"></router-view>
 </div>

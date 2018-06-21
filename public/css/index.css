@@ -69,6 +69,33 @@ body {
 .commentar {
 	border: none;
 }
+#header_search{
+	background-color: white;
+	position: absolute;
+	height:200px;
+	width: 275px;
+	border: 1px solid black;
+	margin-left: 68px;
+	margin-top:117px;
+	overflow: auto;
+}
+.list_users {
+	text-decoration: none;
+	color: black;
+}
+.list_users:hover {
+	text-decoration: none;
+	color: black;
+}
+.razmak {
+	margin-top: 10px;
+}
+.razmak:hover {
+	background-color: #efefef;
+}
+.display_none {
+	display: none;
+}
 
 @media only screen and (max-width: 570px) {
 	.desc-nav {
