@@ -63,7 +63,7 @@
 
         props:{
             item_value: Object,
-            auth_user_id: String,
+            auth_user_id: Number,
             broj_like: Number
         },
 

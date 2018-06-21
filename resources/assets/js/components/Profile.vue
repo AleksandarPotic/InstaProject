@@ -14,7 +14,7 @@
                             <span style="display: none;"><button class="btn btn-primary radius" style="margin-left: 30px; margin-top: -10px;">Follow</button></span>
                             <br>
                             <br>
-                            <span class="follow">20 posts</span> <span class="follow" style="margin-left: 20px;">345 followers</span> <span class="follow" style="margin-left: 20px;">321 following</span>
+                            <span class="follow">{{ user.posts.length }} posts</span> <span class="follow" style="margin-left: 20px; cursor: pointer;" data-toggle="modal" data-target="#following">{{ user.following.length }} followers</span> <span class="follow" style="margin-left: 20px; cursor: pointer;" data-toggle="modal" data-target="#follower">{{ user.follower.length }} following</span>
                             <br>
                             <br>
                             <span id="full-name">{{ auth_user.first_name }} {{ auth_user.last_name }}</span>
@@ -46,6 +46,28 @@
                 </div>
             </div>
 
+            <!-- Modal -->
+            <div class="modal fade" id="following" role="dialog">
+                <div class="modal-dialog">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <list_following :followings="user.following" :auth_user_id="auth_user_id"></list_following>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal -->
+            <div class="modal fade" id="follower" role="dialog">
+                <div class="modal-dialog">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <list_follower :followers="user.follower" :auth_user_id="auth_user_id"></list_follower>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <div class="row text-center" id="mag-footer">
                 <div class="col-12">
@@ -59,14 +81,17 @@
 
 <script>
     import modal_image from './ModalImage';
+    import list_following from './ListFollowing';
+    import list_follower from './ListFollower';
 
     export default {
-        components:{modal_image},
+        components:{modal_image,list_following,list_follower},
         data() {
             return {
                 posts: [],
+                user: [],
                 item: [],
-                user_post: 0
+                number_post: 0
             }
         },
         props: {
@@ -76,6 +101,7 @@
 
 		created() {
             this.fetchPosts();
+            this.fetchUsers();
 		},
         methods: {
             fetchPosts() {
@@ -84,7 +110,22 @@
                     .then(res => {
                         //console.log(res.data);
                         this.posts = res.data;
+
                     })
+            },
+
+            fetchUsers() {
+              fetch('api/users')
+                  .then(response => response.json())
+                  .then(response => {
+                      var users = response.data;
+                      var i;
+                      for (i = 0; i < users.length; i++) {
+                          if (users[i].id == this.auth_user_id) {
+                              this.user = users[i];
+                          }
+                      }
+                  })
             },
 
             addLike(this_post) {
