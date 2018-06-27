@@ -10,6 +10,7 @@ use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -20,6 +21,7 @@ class PostController extends Controller
      */
     public function index()
     {
+        //return Auth::user();
         $posts = Post::orderBy('created_at','desc')->get();
         return PostResource::collection($posts);
     }
@@ -42,7 +44,18 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $name = str_random(20);
+        $info = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $request->image));
+        Storage::put('/public/'.$name.'.jpg',$info);
+
+        $post = new Post();
+
+        $post->user_id = $request->auth_user_id;
+        $post->location = $request->location;
+        $post->description = $request->description;
+        $post->images = Storage::url($name.'.jpg');
+
+        $post->save();
     }
 
     /**
@@ -114,5 +127,22 @@ class PostController extends Controller
 
             return 'dislike';
         }
+    }
+
+    public function indexPost(Request $request)
+    {
+        $user = User::where('id',$request->auth_user_id)->first();
+        $posts = [];
+
+        $followers = $user->followers;
+        foreach ($followers as $follower) {
+            $items = Post::where('user_id',$follower->follow)->get();
+            foreach ($items as $item) {
+                array_push($posts,$item);
+            }
+        }
+
+        return $posts;
+        //return PostResource::collection($posts);
     }
 }

@@ -12,7 +12,7 @@
                                     <img class="logo-post" src="http://localhost:8000/user/images/user-logo.jpg">
                                 </div>
                                 <div class="col-lg-6" v-if="auth_user_id != user.id">
-                                    <router-link :to="{ path:'friends/'+user.id+'/'+auth_user_id }" data-dismiss="modal" style="margin-top:20px; color: #050505; text-decoration:none;"><h6>{{ user.nick_name }}</h6></router-link>
+                                    <router-link :to="{ path:'/friends/'+user.id+'/'+auth_user_id }" data-dismiss="modal" style="margin-top:20px; color: #050505; text-decoration:none;"><h6>{{ user.nick_name }}</h6></router-link>
                                 </div>
                                 <div class="col-lg-6" v-else>
                                     <router-link to="/profile" data-dismiss="modal" style="margin-top:20px; color: #050505; text-decoration:none;"><h6>{{ user.nick_name }}</h6></router-link>

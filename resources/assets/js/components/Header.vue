@@ -19,7 +19,7 @@
 								</router-link>
 							</template>
 							<template v-else>
-								<router-link :to="'/friends/'+user.id+'/'+auth_user_id" class="list_users">
+								<router-link :to="{ path: '/friends/'+user.id+'/'+auth_user_id}" class="list_users">
 									<div class="razmak" @click="SearchNone()">
 										<img class="logo-post" src="http://localhost:8000/user/images/user-logo.jpg"> {{ user.nick_name }}
 									</div>
@@ -35,6 +35,18 @@
 			    </div>
 			</nav>
 		</div>
+
+		<!-- Footer Navbar -->
+		<div class="desc-nav">
+			<nav class="navbar navbar-expand-lg navbar-light fixed-bottom" style="border-top: 1px solid gray; background-color: white;">
+				<div class="col-lg-2 offset-lg-5">
+					<router-link to="/upload"><i class="fas fa-camera" style="font-size: 36px; margin-left: 50px; color: #23272b;"></i></router-link>
+
+				</div>
+			</nav>
+		</div>
+		<!-- Footer Navbar -->
+
 		<div class="desc-nav-2">
 			<nav class="navbar navbar-expand-lg navbar-light fixed-top" style="border-bottom: 3px solid #ff2323; background-color: #ff3f3f;">
 				<div class="col-sm-6">

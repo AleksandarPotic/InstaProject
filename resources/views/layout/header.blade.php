@@ -17,6 +17,15 @@
 		</nav>
 	</div>
 	<!-- Desktop Navabar -->
+	<!-- Footer Navbar -->
+	<div class="desc-nav">
+		<nav class="navbar navbar-expand-lg navbar-light fixed-bottom" style="border-top: 1px solid gray; background-color: white;">
+			<div class="col-lg-2 offset-lg-5">
+				<a href="#"><i class="fas fa-camera" style="font-size: 36px; margin-left: 50px; color: #23272b;"></i></a>
+			</div>
+		</nav>
+	</div>
+	<!-- Footer Navbar -->
 
 	<!-- Mobile Navabar -->
 	<div class="desc-nav-2">

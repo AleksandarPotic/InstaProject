@@ -13,8 +13,15 @@
                         </div>
                         <div class="col-lg-8 col-md-8" id="nick-name-sm">
                             <span id="nick-name">{{ user.nick_name }}</span>
-                            <span v-if="follow123 === true"><button class="btn btn-default radius" style="margin-left: 30px; margin-top: -10px;" @click="Following(auth_user_id,user.id)">Following</button></span>
-                            <span v-else><button class="btn btn-primary radius" style="margin-left: 30px; margin-top: -10px;" @click="Follow(auth_user_id,user.id)">Follow</button></span>
+                            <span v-if="follow123 === true">
+                                <button class="btn btn-default radius" style="margin-left: 30px; margin-top: -10px;" @click="Following(auth_user_id,user.id)">Following</button>
+                                <router-link :to="{ path:'/chat/'+user.id+'/'+auth_user_id }">
+                                    <button class="btn btn-default radius" style="background-color: white; border: 1px solid lightgray; width: 302px; margin-top: 10px;">Message</button>
+                                </router-link>
+                            </span>
+                            <span v-else>
+                                <button class="btn btn-primary radius" style="margin-left: 30px; margin-top: -10px;" @click="Follow(auth_user_id,user.id)">Follow</button>
+                            </span>
                             <br>
                             <br>
                             <span class="follow">{{ user.posts.length }} posts</span> <span class="follow" style="margin-left: 20px; cursor: pointer;" data-toggle="modal" data-target="#following">{{ user.following.length }} followers</span> <span class="follow" style="margin-left: 20px; cursor: pointer;" data-toggle="modal" data-target="#follower">{{ user.follower.length }} following</span>

@@ -7,7 +7,7 @@
             </div>
             <div class="col-lg-8 col-sm-8 col-7">
                 <router-link to="/profile" :user_id_name="user_id_name" v-if="user_id_name == auth_user_id" style="text-decoration:none; color:#1b1e21; cursor: pointer;"><b>{{ nick_name }}</b></router-link>
-                <router-link :to="{ path:'friends/'+user_id_name+'/'+auth_user_id }" v-else style="text-decoration:none; color:#1b1e21; cursor: pointer;"><b>{{ nick_name }}</b></router-link>
+                <router-link :to="{ path:'/friends/'+user_id_name+'/'+auth_user_id }" v-else style="text-decoration:none; color:#1b1e21; cursor: pointer;"><b>{{ nick_name }}</b></router-link>
                 <br>
                 {{ location }}
             </div>
@@ -31,6 +31,9 @@
                 </div>
                 <div class="col-lg-12" style="cursor: pointer;" v-if="number_like != 0" data-toggle="modal" :data-target="'#myModal'+item.id">
                     <b>{{ number_like }} likes</b>
+                </div>
+                <div class="col-lg-12">
+                    <b>{{ nick_name }}</b> {{ item.description }}
                 </div>
                 <!-- Modal -->
                 <div class="modal fade" :id="'myModal'+item.id" role="dialog">

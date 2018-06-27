@@ -22,7 +22,8 @@ class UserResource extends JsonResource
             'email' => $this->email,
             'posts' => $this->posts,
             'follower' => $this->followers,
-            'following' => $this->followings
+            'following' => $this->followings,
+            'messangers' => $this->messangers
         ];
     }
 }

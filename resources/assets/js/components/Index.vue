@@ -26,6 +26,7 @@
         components:{Post, LikeList},
         data() {
             return {
+                following: [],
                 items: [],
 				like_status: false,
 				class1: 'fas fa-heart hrt-1 vue_class',
@@ -36,6 +37,7 @@
 
         created() {
             this.fetchPosts();
+            this.fetchUsers();
         },
 
         props: {
@@ -49,10 +51,31 @@
                 fetch('api/posts')
                     .then(res => res.json())
                     .then(res => {
-                        //console.log(res.data);
                         this.items = res.data;
                     })
             },
+
+            fetchUsers() {
+                fetch('api/users')
+                    .then(response => response.json())
+                    .then(response => {
+                        var users = response.data;
+                        var i;
+                        var x;
+                        var y;
+                        for (i = 0; i < users.length; i++) {
+                            if (users[i].id == this.auth_user_id) {
+                                this.user = users[i];
+                                this.following = users[i].follower;
+
+                                for (x = 0; i < users[x].follower.length; i++) {
+                                    //
+                                }
+                            }
+                        }
+                    })
+            },
+
         }
     }
 </script>

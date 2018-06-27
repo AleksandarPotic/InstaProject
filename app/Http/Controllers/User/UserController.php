@@ -4,7 +4,9 @@ namespace App\Http\Controllers\User;
 
 use App\Follower;
 use App\Following;
+use App\Http\Resources\User\MessangerResource;
 use App\Http\Resources\User\UserResource;
+use App\Messanger;
 use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -22,6 +24,7 @@ class UserController extends Controller
 
         return UserResource::collection($users);
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -63,9 +66,11 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function messanger(Request $request)
     {
-        //
+        $messangers = Messanger::where([['user_id',$request->auth_user_id],['receiver',$request->user_id]])->orWhere([['user_id',$request->user_id],['receiver',$request->auth_user_id]])->get();
+
+        return MessangerResource::collection($messangers);
     }
 
     /**
@@ -74,9 +79,15 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function sendMessage(Request $request)
     {
-        //
+        $message = new Messanger();
+
+        $message->user_id = $request->auth_user_id;
+        $message->receiver = $request->user_id;
+        $message->text = $request->text;
+
+        $message->save();
     }
 
     /**
@@ -100,5 +111,10 @@ class UserController extends Controller
     public function destroy($id)
     {
         //
+    }
+    public function allMessage()
+    {
+        $messages = Messanger::all();
+        return MessangerResource::collection($messages);
     }
 }

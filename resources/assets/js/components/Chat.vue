@@ -7,76 +7,113 @@
 					<img class="logo-messanger" src="http://localhost:8000/user/images/user-logo.jpg">
 				</div>
 				<div class="col-lg-6 col-md-6 col-6">
-					<span><h3>tove_lo</h3></span> 
-					<span>Tove Lo</span>
+					<span><h3>{{ user.nick_name }}</h3></span>
+					<span>{{ user.first_name }} {{ user.last_name }}</span>
 				</div>
 			</div>
 			<hr>
-			<div class="row">
-				<div class="col-lg-8 offset-lg-1 col-md-8 offset-md-1 col-9 text-left sender">
-					<span>
-						Hello World!!!adsdsa adsdsadas adsas asd asdasda sdas das as dasd asdasd asdasda sdasdasds
-					</span>
-					<br>
-					<span class="text-center time-ago-chat">2 hours ago</span>
-				</div>
-				<div class="col-lg-7 offset-lg-4 col-md-7 offset-md-4 col-9 text-right me">
-					<span>
-						Hello World!!!adsdsa adsdsadas adsas asd asdasda sdas das as dasd asdasd asdasda sdasdasds
-					</span>
-					<br>
-					<span class="text-center time-ago-chat">2 hours ago</span>
-				</div>
-				<div class="col-lg-8 offset-lg-1 col-md-8 offset-md-1 col-9 text-left sender">
-					<span>
-						Hello World!!!adsdsa adsdsadas adsas asd asdasda sdas das as dasd asdasd asdasda sdasdasds
-					</span>
-					<br>
-					<span class="text-center time-ago-chat">2 hours ago</span>
-				</div>
-				<div class="col-lg-7 offset-lg-4 col-md-7 offset-md-4 col-9 text-right me">
-					<span>
-						Hello World!!!adsdsa adsdsadas adsas asd asdasda sdas das as dasd asdasd asdasda sdasdasds
-					</span>
-					<br>
-					<span class="text-center time-ago-chat">2 hours ago</span>
-				</div>
-				<div class="col-lg-8 offset-lg-1 col-md-8 offset-md-1 col-9 text-left sender">
-					<span>
-						Hello World!!!adsdsa adsdsadas adsas asd asdasda sdas das as dasd asdasd asdasda sdasdasds
-					</span>
-					<br>
-					<span class="text-center time-ago-chat">2 hours ago</span>
-				</div>
-				<div class="col-lg-7 offset-lg-4 col-md-7 offset-md-4 col-9 text-right me">
-					<span>
-						Hello World!!!adsdsa adsdsadas adsas asd asdasda sdas das as dasd asdasd asdasda sdasdasds
-					</span>
-					<br>
-					<span class="text-center time-ago-chat">2 hours ago</span>
-				</div>
+			<div id="message_scroll" style="height: 280px; overflow: auto;">
+				<template v-for="messanger in messangers">
+					<div class="col-lg-8 offset-lg-1 col-md-8 offset-md-1 col-9 text-left sender" v-if="messanger.user_id != auth_user_id">
+						<span>
+							{{ messanger.text }}
+						</span>
+						<br>
+						<span class="text-center time-ago-chat">{{ messanger.created_at }}</span>
+					</div>
+					<div class="col-lg-7 offset-lg-4 col-md-7 offset-md-4 col-9 text-right me" v-else>
+						<span>
+							{{ messanger.text }}
+						</span>
+						<br>
+						<span class="text-center time-ago-chat">{{ messanger.created_at }}</span>
+					</div>
+				</template>
 			</div>
+			<form @submit.prevent="sendMessage()">
 			<div class="row">
-				<div class="col-lg-12">
-					<hr>
-					<input type="text" class="form-control enter-message" name="" placeholder="Enter message...">
-					<br>
-				</div>
+					<div class="col-lg-12">
+						<hr>
+						<input type="text" class="form-control enter-message" v-model="text" name="" placeholder="Enter message...">
+						<br>
+					</div>
 			</div>
+			</form>
 		</div>
 	</div>
-
-
-
-		<!-- FOOTER -->
-
-		<div class="row text-center" id="mag-footer">
-			<div class="col-12">
-				<hr>
-				<h6><img src="http://icons.iconarchive.com/icons/martz90/circle/512/camera-icon.png" width="20px" height="20px" style="margin-top: -5px;"> INSTAPRO IS A TRADEMARK OF ALEKSANDAR POTIC. COPYRIGHT © ALEKSANDAR POTIC 2018.</h6>
-			</div>
-		</div>
-
-		<!-- /FOOTER -->
 </div>
 </template>
+
+<script>
+	export default {
+	    data() {
+	        return {
+	            user_auth: [],
+	            user: [],
+	            user_id: '',
+				auth_user_id: '',
+				messangers: [],
+				text:''
+			}
+		},
+
+		created() {
+	        this.link();
+	        this.fetchUsers();
+            this.Messanger();
+
+
+            $("#message_scroll").scroll();
+		},
+
+		methods: {
+			fetchUsers() {
+				fetch('http://localhost:8000/api/users')
+					.then(response => response.json())
+					.then(response => {
+						var users = response.data;
+						var i;
+						for (i = 0; i < users.length; i++) {
+							if (users[i].id == this.auth_user_id) {
+								this.user_auth = users[i];
+							}
+						}
+						for (i = 0; i < users.length; i++) {
+							if (users[i].id == this.user_id) {
+                                this.user = users[i];
+							}
+						}
+					})
+			},
+
+            Messanger() {
+                axios.post('http://localhost:8000/api/users/messanger',{
+                    'auth_user_id': this.auth_user_id,
+                    'user_id': this.user_id
+                })
+                    .then(data => {
+                        //console.log(data.data.data);
+                        this.messangers = data.data.data;
+                    })
+            },
+
+            link() {
+                var x = location.pathname;
+
+                this.user_id = x.substring(6,7);
+                this.auth_user_id = x.substring(8);
+            },
+			sendMessage() {
+                axios.post('http://localhost:8000/api/users/sendMessage',{
+                    'auth_user_id': this.auth_user_id,
+                    'user_id': this.user_id,
+					'text': this.text
+                })
+                    .then(data => {
+                        this.text = '';
+                        this.Messanger();
+                    })
+			},
+		}
+	}
+</script>

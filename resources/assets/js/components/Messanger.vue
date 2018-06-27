@@ -2,98 +2,16 @@
 	<div class="container" id="messanger-all">
 	<div class="row">
 		<div class="col-lg-8 offset-lg-2 col-md-12" id="all-bck">
-			<div class="col-lg-12">
+			<div class="col-lg-12 text-center">
 				<br>
-				<input type="text" class="form-control search" id="search-1" name="" placeholder="Search friend...">
+				<h3>Messanger</h3>
 				<hr>
 			</div>
-			<div class="col-lg-12 all-bck-2">
-					<div class="row mess-one">
-						<div class="col-lg-2 col-md-2 col-4">
-							<router-link to="/chat">
-								<img class="logo-messanger" src="http://localhost:8000/user/images/user-logo.jpg">
-							</router-link>
-						</div>
-						<div class="col-lg-6 col-md-6 col-8">
-							<span class="nick-name-messanger"><b>tove_lo</b></span>
-							<br>
-							<span>Hello my friend!!!</span>
-							<span class="time-active-1"><h6>Active 1h ago</h6></span>
-						</div>
-						<div class="col-lg-4 col-md-4 col-8 text-right">
-							<h6 class="time-active-2">Active 1h ago</h6>
-						</div>
-					</div>
-					<div class="row mess-one">
-						<div class="col-lg-2 col-md-2 col-4">
-							<router-link to="/chat">
-								<img class="logo-messanger" src="http://localhost:8000/user/images/user-logo.jpg">
-							</router-link>
-						</div>
-						<div class="col-lg-6 col-md-6 col-8">
-							<span class="nick-name-messanger"><b>tove_lo</b></span>
-							<br>
-							<span>Hello my friend!!!</span>
-							<span class="time-active-1"><h6>Active 1h ago</h6></span>
-						</div>
-						<div class="col-lg-4 col-md-4 col-8 text-right">
-							<h6 class="time-active-2">Active 1h ago</h6>
-						</div>
-					</div>
-					<div class="row mess-one">
-						<div class="col-lg-2 col-md-2 col-4">
-							<router-link to="/chat">
-								<img class="logo-messanger" src="http://localhost:8000/user/images/user-logo.jpg">
-							</router-link>
-						</div>
-						<div class="col-lg-6 col-md-6 col-8">
-							<span class="nick-name-messanger"><b>tove_lo</b></span>
-							<br>
-							<span>Hello my friend!!!</span>
-							<span class="time-active-1"><h6>Active 1h ago</h6></span>
-						</div>
-						<div class="col-lg-4 col-md-4 col-8 text-right">
-							<h6 class="time-active-2">Active 1h ago</h6>
-						</div>
-					</div>
-					<div class="row mess-one">
-						<div class="col-lg-2 col-md-2 col-4">
-							<router-link to="/chat">
-								<img class="logo-messanger" src="http://localhost:8000/user/images/user-logo.jpg">
-							</router-link>
-						</div>
-						<div class="col-lg-6 col-md-6 col-8">
-							<span class="nick-name-messanger"><b>tove_lo</b></span>
-							<br>
-							<span>Hello my friend!!!</span>
-							<span class="time-active-1"><h6>Active 1h ago</h6></span>
-						</div>
-						<div class="col-lg-4 col-md-4 col-8 text-right">
-							<h6 class="time-active-2">Active 1h ago</h6>
-						</div>
-					</div>
-					<div class="row mess-one">
-						<div class="col-lg-2 col-md-2 col-4">
-							<router-link to="/chat">
-								<img class="logo-messanger" src="http://localhost:8000/user/images/user-logo.jpg">
-							</router-link>
-						</div>
-						<div class="col-lg-6 col-md-6 col-8">
-							<span class="nick-name-messanger"><b>tove_lo</b></span>
-							<br>
-							<span>Hello my friend!!!</span>
-							<span class="time-active-1"><h6>Active 1h ago</h6></span>
-						</div>
-						<div class="col-lg-4 col-md-4 col-8 text-right">
-							<h6 class="time-active-2">Active 1h ago</h6>
-						</div>
-					</div>
+			<div class="col-lg-12 all-bck-2" style="height: 300px; overflow: auto;">
+				<user_chat v-for="user in users" :auth_user_id="auth_user_id" :key="user.id" :user="user"></user_chat>
 			</div>
 		</div>
 	</div>
-
-
-
 		<!-- FOOTER -->
 
 		<div class="row text-center" id="mag-footer">
@@ -106,3 +24,36 @@
 		<!-- /FOOTER -->
 </div>
 </template>
+
+<script>
+    import user_chat from './UserChat';
+	export default {
+
+	    components: {user_chat},
+	    data() {
+	        return {
+	            users:[],
+                search: ''
+			}
+		},
+
+		created() {
+	        this.fetchUsers();
+		},
+		props: {
+            auth_user_id: Number
+		},
+
+		methods: {
+	        fetchUsers() {
+	            fetch('api/users')
+					.then(response => response.json())
+                    .then(response => {
+                        this.users = response.data;
+                    })
+			},
+
+
+		}
+	}
+</script>
