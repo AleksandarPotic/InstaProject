@@ -3,7 +3,7 @@
         <input type="hidden" :value="auth_user_id" class="auth_user_id">
         <div class="row post-user">
             <div class="col-lg-1 col-sm-1 col-2">
-                <img class="logo-post" src="http://localhost:8000/user/images/user-logo.jpg">
+                <img class="logo-post" :src="item.user.avatar">
             </div>
             <div class="col-lg-8 col-sm-8 col-7">
                 <router-link to="/profile" :user_id_name="user_id_name" v-if="user_id_name == auth_user_id" style="text-decoration:none; color:#1b1e21; cursor: pointer;"><b>{{ nick_name }}</b></router-link>

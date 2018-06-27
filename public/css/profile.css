@@ -36,6 +36,9 @@ body {
 .profile-mg {
 	margin-top: 20px;
 }
+.log-pro:hover {
+	opacity: 0.7;
+}
 @media only screen and (max-width: 400px) {
 	#nick-name {
 		font-size: 30px;

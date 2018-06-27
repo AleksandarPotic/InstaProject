@@ -9,7 +9,7 @@
                             <span style="display:none;">{{ follow123 = true }}</span>
                         </template>
                         <div class="col-lg-4 col-md-4 col-4">
-                            <img class="logo-profile" src="http://localhost:8000/user/images/user-logo.jpg">
+                            <img class="logo-profile" :src="user.avatar">
                         </div>
                         <div class="col-lg-8 col-md-8" id="nick-name-sm">
                             <span id="nick-name">{{ user.nick_name }}</span>

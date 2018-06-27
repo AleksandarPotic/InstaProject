@@ -9,7 +9,7 @@
                     <template v-for="user in users" v-if="user.id == follower.follow">
                         <div class="row">
                             <div class="col-lg-2">
-                                <img class="logo-post" src="http://localhost:8000/user/images/user-logo.jpg">
+                                <img class="logo-post" :src="user.avatar">
                             </div>
                             <div class="col-lg-6" style="cursor: pointer;" v-if="auth_user_id != user.id">
                                 <router-link :to="{ path:'/friends/'+user.id+'/'+auth_user_id }" data-dismiss="modal" style="margin-top:20px; color: #050505; text-decoration:none;"><h6>{{ user.nick_name }}</h6></router-link>

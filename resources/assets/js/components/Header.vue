@@ -14,14 +14,14 @@
 							<template v-if="auth_user_id == user.id">
 								<router-link to="/profile" class="list_users">
 									<div class="razmak" @click="SearchNone()">
-										<img class="logo-post" src="http://localhost:8000/user/images/user-logo.jpg"> {{ user.nick_name }}
+										<img class="logo-post" :src="user.avatar"> {{ user.nick_name }}
 									</div>
 								</router-link>
 							</template>
 							<template v-else>
 								<router-link :to="{ path: '/friends/'+user.id+'/'+auth_user_id}" class="list_users">
 									<div class="razmak" @click="SearchNone()">
-										<img class="logo-post" src="http://localhost:8000/user/images/user-logo.jpg"> {{ user.nick_name }}
+										<img class="logo-post" :src="user.avatar"> {{ user.nick_name }}
 									</div>
 								</router-link>
 							</template>

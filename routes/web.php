@@ -10,6 +10,7 @@ Route::get('/messanger','User\HomeController@index')->name('home.instapro');
 Route::get('/notification','User\HomeController@index')->name('home.instapro');
 Route::get('/chat','User\HomeController@index')->name('home.instapro');
 Route::get('/upload','User\HomeController@index')->name('home.instapro');
+Route::get('/crop','User\HomeController@index')->name('home.instapro');
 Route::get('/friends/{name1}/{name2}','User\HomeController@index')->name('home.instapro');
 Route::get('/chat/{name1}/{name2}','User\HomeController@index')->name('home.instapro');
 Route::get('/auth','HomeController@auth');

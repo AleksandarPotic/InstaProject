@@ -10,6 +10,7 @@ use App\Messanger;
 use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -23,6 +24,19 @@ class UserController extends Controller
         $users = User::all();
 
         return UserResource::collection($users);
+    }
+
+    public function store(Request $request)
+    {
+        $user = User::where('id',$request->auth_user_id)->first();
+
+        $name = str_random(20);
+        $info = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $request->image));
+        Storage::put('/public/profile/'.$name.'.jpg',$info);
+
+        $user->avatar = Storage::url('profile/'.$name.'.jpg');
+
+        $user->save();
     }
 
 

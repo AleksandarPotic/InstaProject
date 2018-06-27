@@ -5,7 +5,50 @@
                 <div class="col-lg-8 offset-lg-2 col-md-12">
                     <div class="row">
                         <div class="col-lg-4 col-md-4 col-4">
-                            <img class="logo-profile" src="http://localhost:8000/user/images/user-logo.jpg">
+                            <a href="" data-toggle="modal" data-target="#profileModal">
+                                <img class="logo-profile log-pro" :src="avatar">
+                            </a>
+                            <div id="profileModal" class="modal fade" role="dialog">
+                                <div class="modal-dialog">
+
+                                    <!-- Modal content-->
+                                    <div class="modal-content">
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <div class="col-lg-1 offset-lg-11 text-right" style="margin-bottom: 5px; margin-top: -5px;">
+                                                    <h5 style="cursor: pointer;" data-dismiss="modal"><i class="fas fa-times"></i></h5>
+                                                </div>
+                                                <div class="col-lg-12">
+                                                    <vue-avatar
+                                                            :width=400
+                                                            :height=410
+                                                            ref="vueavatar"
+                                                            @vue-avatar-editor:image-ready="onImageReady"
+                                                            :image="avatar"
+                                                    >
+                                                    </vue-avatar>
+                                                    <br>
+                                                    <vue-avatar-scale
+                                                            ref="vueavatarscale"
+                                                            @vue-avatar-editor-scale:change-scale="onChangeScale"
+                                                            :width=450
+                                                            :min=1
+                                                            :max=3
+                                                            :step=0.02
+                                                    >
+                                                    </vue-avatar-scale>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <form @submit.prevent="changeProfile()">
+                                            <div class="modal-footer">
+                                                <button type="submit" v-if="image_status" class="btn btn-default btn-block">Change Profile</button>
+                                            </div>
+                                        </form>
+                                    </div>
+
+                                </div>
+                            </div>
                         </div>
                         <div class="col-lg-8 col-md-8" id="nick-name-sm">
                             <span id="nick-name">{{ auth_user.nick_name }}</span>
@@ -83,15 +126,20 @@
     import modal_image from './ModalImage';
     import list_following from './ListFollowing';
     import list_follower from './ListFollower';
+    import Vue from 'vue'
+    import VueAvatar from '../vue-avatar-editor/src/components/VueAvatar'
+    import VueAvatarScale from '../vue-avatar-editor/src/components/VueAvatarScale'
 
     export default {
-        components:{modal_image,list_following,list_follower},
+        components:{modal_image, list_following, list_follower, VueAvatar, VueAvatarScale},
         data() {
             return {
                 posts: [],
                 user: [],
                 item: [],
-                number_post: 0
+                number_post: 0,
+                image_status: false,
+                avatar: ''
             }
         },
         props: {
@@ -102,6 +150,7 @@
 		created() {
             this.fetchPosts();
             this.fetchUsers();
+            this.avatar = this.auth_user.avatar;
 		},
         methods: {
             fetchPosts() {
@@ -110,7 +159,6 @@
                     .then(res => {
                         //console.log(res.data);
                         this.posts = res.data;
-
                     })
             },
 
@@ -145,6 +193,29 @@
             modalId(post) {
                 //console.log(post);
                 this.item = post;
+            },
+
+            onChangeScale(scale) {
+                this.$refs.vueavatar.changeScale(scale)
+            },
+            saveClicked() {
+                var img = this.$refs.vueavatar.getImageScaled()
+                // use img
+            },
+            onImageReady(scale) {
+                this.$refs.vueavatarscale.setScale(scale);
+                this.image_status = true;
+            },
+            changeProfile() {
+                var img = this.$refs.vueavatar.getImageScaled();
+                axios.post('api/users',{
+                    'auth_user_id': this.auth_user_id,
+                    'image': img.toDataURL()
+                })
+                    .then(data => {
+                        this.avatar = img.toDataURL();
+                        this.$toasted.show('Successfully changed profile image.',{type:'success'}).goAway(3000);
+                    })
             }
         }
 

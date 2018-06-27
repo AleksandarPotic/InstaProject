@@ -2,7 +2,7 @@
     <div :class="message_status ? 'row mess-one' : 'row mess-one display_none'">
         <div class="col-lg-2 col-md-2 col-4">
             <router-link :to="{ path:'/chat/'+user.id+'/'+auth_user_id }" style="text-decoration: none;">
-                <img class="logo-messanger" src="http://localhost:8000/user/images/user-logo.jpg">
+                <img class="logo-messanger" :src="user.avatar">
             </router-link>
         </div>
         <div class="col-lg-6 col-md-6 col-8">
