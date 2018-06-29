@@ -52,7 +52,7 @@
                         </div>
                         <div class="col-lg-8 col-md-8" id="nick-name-sm">
                             <span id="nick-name">{{ auth_user.nick_name }}</span>
-                            <span><i class="fas fa-user-cog" style="font-size: 40px; margin-left: 30px;"></i></span>
+                            <a style="cursor:pointer;" data-toggle="modal" data-target="#configModal"><span><i class="fas fa-user-cog" style="font-size: 40px; margin-left: 30px;"></i></span></a>
                             <span style="display: none;"><button class="btn btn-default radius" style="margin-left: 30px; margin-top: -10px;">Following</button></span>
                             <span style="display: none;"><button class="btn btn-primary radius" style="margin-left: 30px; margin-top: -10px;">Follow</button></span>
                             <br>
@@ -61,6 +61,29 @@
                             <br>
                             <br>
                             <span id="full-name">{{ auth_user.first_name }} {{ auth_user.last_name }}</span>
+                        </div>
+                        <!-- Modal -->
+                        <div id="configModal" class="modal fade" role="dialog">
+                            <div class="modal-dialog">
+
+                                <!-- Modal content-->
+                                <div class="modal-content">
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-lg-1 offset-lg-11 text-right" style="margin-bottom: 5px; margin-top: -5px;">
+                                                <h5 style="cursor: pointer;" data-dismiss="modal"><i class="fas fa-times"></i></h5>
+                                            </div>
+                                            <div class="col-lg-7 col-md-12">
+                                                <p>Some text in the modal.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" @click="Logout()" class="btn btn-default btn-block radius" style="background-color: #f2f2f2; border: 1px solid lightgray;">Sign Out</button>
+                                    </div>
+                                </div>
+
+                            </div>
                         </div>
                     </div>
                     <div class="row">
@@ -215,6 +238,14 @@
                     .then(data => {
                         this.avatar = img.toDataURL();
                         this.$toasted.show('Successfully changed profile image.',{type:'success'}).goAway(3000);
+                    })
+            },
+            Logout() {
+                axios.post('/logout',{
+                    'auth_user_id': this.auth_user_id
+                })
+                    .then(data => {
+                        location.reload();
                     })
             }
         }

@@ -17,9 +17,6 @@
                                 <div class="col-lg-6" v-else>
                                     <router-link to="/profile" data-dismiss="modal" style="margin-top:20px; color: #050505; text-decoration:none;"><h6>{{ user.nick_name }}</h6></router-link>
                                 </div>
-                                <div class="col-lg-4" v-if="auth_user_id != user.id">
-                                    <button class="btn btn-primary radius btn-block">Follow</button>
-                                </div>
                             </div>
                             <hr>
                         </template>

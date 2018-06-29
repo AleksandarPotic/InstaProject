@@ -8,7 +8,7 @@
 				</router-link>
 
 			    <form class="form-inline col-lg-3 col-md-3">
-			      <input class="form-control radius" type="text" v-model="search" placeholder="Search" aria-label="Search" style="padding-right: 50px; margin-left: 70px; color: gray; font-weight: bold;">
+			      <input class="form-control radius" type="text" v-model="search" placeholder="Search" aria-label="Search" style="padding-right: 50px; margin-left: 40px; color: gray; font-weight: bold;">
 					<div id="header_search" :class="search === '' ? 'col-lg-11 display_none' : 'col-lg-11' ">
 						<template v-for="user in filteredUsers">
 							<template v-if="auth_user_id == user.id">

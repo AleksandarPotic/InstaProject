@@ -118,6 +118,7 @@ class PostController extends Controller
             $lk->post_id = $request->post_id;
             $lk->user_id = $user->id;
             $lk->user_nick_name = $user->nick_name;
+            $lk->user_avatar = $user->avatar;
 
             $lk->save();
 

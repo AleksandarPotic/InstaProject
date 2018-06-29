@@ -5,11 +5,17 @@
 			<div class="col-lg-12 text-center">
 				<br>
 				<h3>Messanger</h3>
+
 				<hr>
 			</div>
 			<div class="col-lg-12 all-bck-2" style="height: 300px; overflow: auto;">
-				<user_chat v-for="user in users" :auth_user_id="auth_user_id" :key="user.id" :user="user"></user_chat>
-			</div>
+				<span id="preload_gif" style="margin-left: 250px;">
+					<img src="http://localhost:8000/user/images/preload-1.gif" height="230px" width="200px">
+				</span>
+                <span id="user_chat_class" style="display: none;">
+				    <user_chat v-for="user in users" :auth_user_id="auth_user_id" :key="user.id" :user="user"></user_chat>
+			    </span>
+            </div>
 		</div>
 	</div>
 		<!-- FOOTER -->
@@ -39,6 +45,7 @@
 
 		created() {
 	        this.fetchUsers();
+	        this.Preload();
 		},
 		props: {
             auth_user_id: Number
@@ -52,8 +59,12 @@
                         this.users = response.data;
                     })
 			},
-
-
+			Preload() {
+                setTimeout(function () {
+                    $("#preload_gif").hide();
+                    $("#user_chat_class").show();
+                },3000);
+			}
 		}
 	}
 </script>

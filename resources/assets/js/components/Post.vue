@@ -1,5 +1,5 @@
 <template>
-    <div class="col-lg-8 offset-lg-2 col-sm-12 col-12 post-c">
+    <div v-if="post_status">
         <input type="hidden" :value="auth_user_id" class="auth_user_id">
         <div class="row post-user">
             <div class="col-lg-1 col-sm-1 col-2">
@@ -41,7 +41,7 @@
                         <!-- Modal content-->
                         <div class="modal-content">
                             <div class="modal-body">
-                                <LikeList :post_likes="item.likes"></LikeList>
+                                <LikeList :post_likes="item.likes" :auth_user_id="auth_user_id"></LikeList>
                             </div>
                         </div>
                     </div>
@@ -87,12 +87,14 @@
                 like_status: false,
                 class1: 'fas fa-heart hrt-1 vue_class',
                 class2: 'far fa-heart hrt-1',
-                number_like: 0
+                number_like: 0,
+                post_status: false
             }
         },
 
         created() {
             this.fetchPosts();
+            this.RenderPost();
             this.number_like = this.like;
         },
 
@@ -109,7 +111,6 @@
             auth_user_id: Number
         },
 
-
         methods: {
             fetchPosts() {
                 fetch('api/posts')
@@ -117,6 +118,21 @@
                     .then(res => {
                         //console.log(res.data);
                         this.posts = res.data;
+                    })
+            },
+            RenderPost() {
+                var user_post_id = this.user_id_name;
+                axios.post('api/users/follower',{
+                    'auth_user_id': this.auth_user_id
+                })
+                    .then(data => {
+                        var followers = data.data;
+                        var i;
+                        for (i = 0; i < followers.length; i++) {
+                            if (user_post_id == followers[i].follow) {
+                                this.post_status = true;
+                            }
+                        }
                     })
             },
             addComment(post) {

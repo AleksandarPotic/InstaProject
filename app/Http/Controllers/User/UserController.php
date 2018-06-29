@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Events\MessagePosted;
 use App\Follower;
 use App\Following;
 use App\Http\Resources\User\MessangerResource;
@@ -95,6 +96,8 @@ class UserController extends Controller
      */
     public function sendMessage(Request $request)
     {
+        $user = User::where('id',$request->user_id)->first();
+
         $message = new Messanger();
 
         $message->user_id = $request->auth_user_id;
@@ -102,6 +105,8 @@ class UserController extends Controller
         $message->text = $request->text;
 
         $message->save();
+
+        event(new MessagePosted($message,$user));
     }
 
     /**
@@ -130,5 +135,12 @@ class UserController extends Controller
     {
         $messages = Messanger::all();
         return MessangerResource::collection($messages);
+    }
+
+    public function follower(Request $request)
+    {
+        $user = User::where('id',$request->auth_user_id)->first();
+
+        return $user->followers;
     }
 }

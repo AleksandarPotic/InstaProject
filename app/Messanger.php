@@ -6,12 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Messanger extends Model
 {
-
     /**
      * Get the post that owns the comment.
      */
     public function user()
     {
-        return $this->belongsTo('App\User');
+        return $this->belongsTo('App\User','receiver');
     }
 }

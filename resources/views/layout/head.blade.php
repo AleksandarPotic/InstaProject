@@ -11,7 +11,7 @@
 	<link rel="stylesheet" type="text/css" href="{{ asset('/css/chat.css') }}">
 	<link rel="stylesheet" type="text/css" href="{{ asset('/css/notification.css') }}">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
 	<meta name="csrf-token" content="{{ csrf_token() }}">
 	<script>window.Laravel = { csrfToken: '{{ csrf_token() }}' }</script>
 </head>

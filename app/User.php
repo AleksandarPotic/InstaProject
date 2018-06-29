@@ -50,8 +50,13 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\Following');
     }
+
     public function messangers()
     {
-        return $this->hasMany('App\Messanger');
+        return $this->hasMany('App\Messanger','user_id');
+    }
+    public function receivers()
+    {
+        return $this->hasMany('App\Messanger','receiver');
     }
 }

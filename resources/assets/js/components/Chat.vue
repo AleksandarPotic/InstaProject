@@ -3,12 +3,14 @@
 	<div class="row">
 		<div class="col-lg-6 offset-lg-3 col-md-12" id="chat-div">
 			<div class="row" style="margin-top: 15px;">
+				<input type="hidden" id="au_id" :value="auth_user_id">
+				<input type="hidden" id="us_id" :value="user.id">
 				<div class="col-lg-2 col-md-2 col-3">
-					<img class="logo-messanger" src="http://localhost:8000/user/images/user-logo.jpg">
+					<img class="logo-messanger" :src="user.avatar">
 				</div>
 				<div class="col-lg-6 col-md-6 col-6">
 					<span><h3>{{ user.nick_name }}</h3></span>
-					<span>{{ user.first_name }} {{ user.last_name }}</span>
+					<span>{{ user.first_name }} {{ user.last_name }} <b>{{ ticker }}</b></span>
 				</div>
 			</div>
 			<hr>
@@ -53,7 +55,8 @@
 	            user_id: '',
 				auth_user_id: '',
 				messangers: [],
-				text:''
+				text:'',
+                ticker: new Date().toLocaleTimeString()
 			}
 		},
 
@@ -61,33 +64,30 @@
 	        this.link();
 	        this.fetchUsers();
             this.Messanger();
-
-
-            $("#message_scroll").scroll();
 		},
 
 		methods: {
-			fetchUsers() {
-				fetch('http://localhost:8000/api/users')
-					.then(response => response.json())
-					.then(response => {
-						var users = response.data;
-						var i;
-						for (i = 0; i < users.length; i++) {
-							if (users[i].id == this.auth_user_id) {
-								this.user_auth = users[i];
-							}
-						}
-						for (i = 0; i < users.length; i++) {
-							if (users[i].id == this.user_id) {
+            fetchUsers() {
+                fetch('http://localhost:8000/api/users')
+                    .then(response => response.json())
+                    .then(response => {
+                        var users = response.data;
+                        var i;
+                        for (i = 0; i < users.length; i++) {
+                            if (users[i].id == this.auth_user_id) {
+                                this.user_auth = users[i];
+                            }
+                        }
+                        for (i = 0; i < users.length; i++) {
+                            if (users[i].id == this.user_id) {
                                 this.user = users[i];
-							}
-						}
-					})
-			},
+                            }
+                        }
+                    })
+            },
 
             Messanger() {
-                axios.post('http://localhost:8000/api/users/messanger',{
+                axios.post('http://localhost:8000/api/users/messanger', {
                     'auth_user_id': this.auth_user_id,
                     'user_id': this.user_id
                 })
@@ -95,25 +95,34 @@
                         //console.log(data.data.data);
                         this.messangers = data.data.data;
                     })
+
+				Echo.join('chatroom')
+					.here()
+					.joining()
+					.leaving()
+					.listen('MessagePosted',(e)=>{
+					    console.log(e);
+					});
             },
 
-            link() {
-                var x = location.pathname;
-
-                this.user_id = x.substring(6,7);
-                this.auth_user_id = x.substring(8);
-            },
-			sendMessage() {
-                axios.post('http://localhost:8000/api/users/sendMessage',{
+            sendMessage() {
+                axios.post('http://localhost:8000/api/users/sendMessage', {
                     'auth_user_id': this.auth_user_id,
                     'user_id': this.user_id,
-					'text': this.text
+                    'text': this.text
                 })
                     .then(data => {
                         this.text = '';
                         this.Messanger();
                     })
-			},
-		}
+            },
+
+            link() {
+                var x = location.pathname;
+
+                this.user_id = x.substring(6, 7);
+                this.auth_user_id = x.substring(8);
+            }
+        },
 	}
 </script>
