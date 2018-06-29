@@ -25337,8 +25337,8 @@ window.Pusher = __webpack_require__(45);
 
 window.Echo = new __WEBPACK_IMPORTED_MODULE_0_laravel_echo___default.a({
     broadcaster: 'pusher',
-    key: "69a6bf86c0c58f46578e",
-    cluster: "eu",
+    key: 'f1facebf97297cf2b200',
+    cluster: 'eu',
     encrypted: true
 });
 
@@ -60783,6 +60783,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -60792,20 +60795,28 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             user_id: '',
             auth_user_id: '',
             messangers: [],
-            text: '',
-            ticker: new Date().toLocaleTimeString()
+            text: ''
         };
     },
     created: function created() {
+        var _this = this;
+
         this.link();
         this.fetchUsers();
         this.Messanger();
+
+        Echo.private('testMessanger').listen('Messanger', function (e) {
+            if (_this.auth_user_id == e.message.receiver && _this.user_id == e.message.user_id) {
+                //console.log(e.message);
+                _this.messangers.push(e.message);
+            }
+        });
     },
 
 
     methods: {
         fetchUsers: function fetchUsers() {
-            var _this = this;
+            var _this2 = this;
 
             fetch('http://localhost:8000/api/users').then(function (response) {
                 return response.json();
@@ -60813,42 +60824,42 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 var users = response.data;
                 var i;
                 for (i = 0; i < users.length; i++) {
-                    if (users[i].id == _this.auth_user_id) {
-                        _this.user_auth = users[i];
+                    if (users[i].id == _this2.auth_user_id) {
+                        _this2.user_auth = users[i];
                     }
                 }
                 for (i = 0; i < users.length; i++) {
-                    if (users[i].id == _this.user_id) {
-                        _this.user = users[i];
+                    if (users[i].id == _this2.user_id) {
+                        _this2.user = users[i];
                     }
                 }
             });
         },
         Messanger: function Messanger() {
-            var _this2 = this;
+            var _this3 = this;
 
             axios.post('http://localhost:8000/api/users/messanger', {
                 'auth_user_id': this.auth_user_id,
                 'user_id': this.user_id
             }).then(function (data) {
                 //console.log(data.data.data);
-                _this2.messangers = data.data.data;
-            });
-
-            Echo.join('chatroom').here().joining().leaving().listen('MessagePosted', function (e) {
-                console.log(e);
+                _this3.messangers = data.data.data;
             });
         },
         sendMessage: function sendMessage() {
-            var _this3 = this;
+            var _this4 = this;
 
+            var text = this.text;
+            var auth_user_id = this.auth_user_id;
+            var user_id = this.user_id;
+
+            this.text = '';
             axios.post('http://localhost:8000/api/users/sendMessage', {
-                'auth_user_id': this.auth_user_id,
-                'user_id': this.user_id,
-                'text': this.text
+                'auth_user_id': auth_user_id,
+                'user_id': user_id,
+                'text': text
             }).then(function (data) {
-                _this3.text = '';
-                _this3.Messanger();
+                _this4.Messanger();
             });
         },
         link: function link() {
@@ -60858,6 +60869,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.auth_user_id = x.substring(8);
         }
     }
+
 });
 
 /***/ }),
@@ -60905,10 +60917,8 @@ var render = function() {
                   _vm._v(
                     _vm._s(_vm.user.first_name) +
                       " " +
-                      _vm._s(_vm.user.last_name) +
-                      " "
-                  ),
-                  _c("b", [_vm._v(_vm._s(_vm.ticker))])
+                      _vm._s(_vm.user.last_name)
+                  )
                 ])
               ])
             ]
@@ -61027,11 +61037,27 @@ var render = function() {
             ]
           )
         ]
-      )
+      ),
+      _vm._v(" "),
+      _vm._m(0)
     ])
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("audio", { attrs: { id: "myAudio" } }, [
+      _c("source", {
+        attrs: {
+          src: "http://localhost:8000/user/song/plucky.mp3",
+          type: "audio/ogg"
+        }
+      })
+    ])
+  }
+]
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {

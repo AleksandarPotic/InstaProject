@@ -10,7 +10,7 @@
 				</div>
 				<div class="col-lg-6 col-md-6 col-6">
 					<span><h3>{{ user.nick_name }}</h3></span>
-					<span>{{ user.first_name }} {{ user.last_name }} <b>{{ ticker }}</b></span>
+					<span>{{ user.first_name }} {{ user.last_name }}</span>
 				</div>
 			</div>
 			<hr>
@@ -42,6 +42,9 @@
 			</div>
 			</form>
 		</div>
+		<audio id="myAudio">
+			<source src="http://localhost:8000/user/song/plucky.mp3" type="audio/ogg">
+		</audio>
 	</div>
 </div>
 </template>
@@ -55,8 +58,7 @@
 	            user_id: '',
 				auth_user_id: '',
 				messangers: [],
-				text:'',
-                ticker: new Date().toLocaleTimeString()
+				text:''
 			}
 		},
 
@@ -64,6 +66,14 @@
 	        this.link();
 	        this.fetchUsers();
             this.Messanger();
+
+            Echo.private('testMessanger')
+                .listen('Messanger', (e) => {
+                    if (this.auth_user_id == e.message.receiver && this.user_id == e.message.user_id) {
+                        //console.log(e.message);
+                        this.messangers.push(e.message);
+                    }
+                });
 		},
 
 		methods: {
@@ -95,24 +105,20 @@
                         //console.log(data.data.data);
                         this.messangers = data.data.data;
                     })
-
-				Echo.join('chatroom')
-					.here()
-					.joining()
-					.leaving()
-					.listen('MessagePosted',(e)=>{
-					    console.log(e);
-					});
             },
 
             sendMessage() {
+                var text = this.text;
+                var auth_user_id = this.auth_user_id;
+                var user_id = this.user_id;
+
+                this.text = '';
                 axios.post('http://localhost:8000/api/users/sendMessage', {
-                    'auth_user_id': this.auth_user_id,
-                    'user_id': this.user_id,
-                    'text': this.text
+                    'auth_user_id': auth_user_id,
+                    'user_id': user_id,
+                    'text': text
                 })
                     .then(data => {
-                        this.text = '';
                         this.Messanger();
                     })
             },
@@ -122,7 +128,8 @@
 
                 this.user_id = x.substring(6, 7);
                 this.auth_user_id = x.substring(8);
-            }
+            },
         },
+
 	}
 </script>

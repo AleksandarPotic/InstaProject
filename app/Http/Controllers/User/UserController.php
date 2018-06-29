@@ -106,7 +106,9 @@ class UserController extends Controller
 
         $message->save();
 
-        event(new MessagePosted($message,$user));
+        $message1 = new MessangerResource($message);
+
+        event(new \App\Events\Messanger($message1));
     }
 
     /**

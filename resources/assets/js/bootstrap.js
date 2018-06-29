@@ -50,7 +50,7 @@ if (token) {
 
  window.Echo = new Echo({
      broadcaster: 'pusher',
-     key: process.env.MIX_PUSHER_APP_KEY,
-     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
+     key: 'f1facebf97297cf2b200',
+     cluster: 'eu',
      encrypted: true
  });
