@@ -36,7 +36,12 @@
                             <hr>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row" id="preload_gif">
+                        <div class="offset-lg-4">
+                            <img src="http://localhost:8000/user/images/preload-1.gif" height="250px" width="215px">
+                        </div>
+                    </div>
+                    <div class="row" id="user_chat_class" style="display: none;">
                         <template v-for="post in posts" v-if="post.user.id == user_id">
                             <div class="col-lg-4 col-md-6 profile-mg">
                                 <img class="post-img-1" :src="post.img" data-toggle="modal" :data-target="'#myModalImage'+post.id">
@@ -120,6 +125,7 @@
             this.link();
             this.fetchPosts();
             this.fetchUsers();
+            this.Preload();
         },
         methods: {
             fetchPosts() {
@@ -176,6 +182,12 @@
                     .then(data => {
                         this.fetchUsers();
                     });
+            },
+            Preload() {
+                setTimeout(function () {
+                    $("#preload_gif").hide();
+                    $("#user_chat_class").show();
+                },2400);
             }
         }
     }

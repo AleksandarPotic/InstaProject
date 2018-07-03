@@ -145,4 +145,10 @@ class UserController extends Controller
 
         return $user->followers;
     }
+    public function following(Request $request)
+    {
+        $user = User::where('id',$request->auth_user_id)->first();
+
+        return $user->followings;
+    }
 }

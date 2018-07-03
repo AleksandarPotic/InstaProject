@@ -57,7 +57,7 @@
                             <span style="display: none;"><button class="btn btn-primary radius" style="margin-left: 30px; margin-top: -10px;">Follow</button></span>
                             <br>
                             <br>
-                            <span class="follow">{{ user.posts.length }} posts</span> <span class="follow" style="margin-left: 20px; cursor: pointer;" data-toggle="modal" data-target="#following">{{ user.following.length }} followers</span> <span class="follow" style="margin-left: 20px; cursor: pointer;" data-toggle="modal" data-target="#follower">{{ user.follower.length }} following</span>
+                            <span class="follow">{{ user.posts.length }} posts</span> <span class="follow" style="margin-left: 20px; cursor: pointer;" data-toggle="modal" data-target="#following">{{ following }} followers</span> <span class="follow" style="margin-left: 20px; cursor: pointer;" data-toggle="modal" data-target="#follower">{{ follower }} following</span>
                             <br>
                             <br>
                             <span id="full-name">{{ auth_user.first_name }} {{ auth_user.last_name }}</span>
@@ -91,8 +91,13 @@
                             <hr>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-lg-4 col-md-6 profile-mg" v-for="value in posts" v-if="value.user.id == auth_user.id">
+                    <div class="row" id="preload_gif">
+                        <div class="offset-lg-4">
+                            <img src="http://localhost:8000/user/images/preload-1.gif" height="250px" width="215px">
+                        </div>
+                    </div>
+                    <div class="row" id="user_chat_class" style="display: none;">
+                        <div class="col-lg-4 col-md-6 profile-mg" v-for="value in posts">
                             <img class="post-img-1" @click="modalId(value)" :src="value.img" data-toggle="modal" :data-target="'#myModalImage'+value.id">
                             <!-- Modal -->
                             <div class="modal fade" :id="'myModalImage'+value.id" role="dialog">
@@ -160,6 +165,8 @@
                 posts: [],
                 user: [],
                 item: [],
+                follower: 0,
+                following: 0,
                 number_post: 0,
                 image_status: false,
                 avatar: ''
@@ -173,18 +180,41 @@
 		created() {
             this.fetchPosts();
             this.fetchUsers();
+            this.RenderFollower();
+            this.RenderFollowing();
+            this.Preload();
             this.avatar = this.auth_user.avatar;
 		},
         methods: {
             fetchPosts() {
-                fetch('api/posts')
-                    .then(res => res.json())
+                axios.post('api/posts/user',{
+                    'auth_user_id': this.auth_user_id
+                })
                     .then(res => {
-                        //console.log(res.data);
-                        this.posts = res.data;
+                        //console.log(res.data.data);
+                        this.posts = res.data.data;
                     })
             },
+            RenderFollower() {
 
+                axios.post('api/users/follower',{
+                    'auth_user_id': this.auth_user_id
+                })
+                    .then(data => {
+                        this.follower = data.data.length;
+                        //console.log(data.data);
+                    })
+            },
+            RenderFollowing() {
+
+                axios.post('api/users/following',{
+                    'auth_user_id': this.auth_user_id
+                })
+                    .then(data => {
+                        this.following = data.data.length;
+                        //console.log(data.data);
+                    })
+            },
             fetchUsers() {
               fetch('api/users')
                   .then(response => response.json())
@@ -245,8 +275,15 @@
                     'auth_user_id': this.auth_user_id
                 })
                     .then(data => {
+                        //console.log(data);
                         location.reload();
                     })
+            },
+            Preload() {
+                setTimeout(function () {
+                    $("#preload_gif").hide();
+                    $("#user_chat_class").show();
+                },2400);
             }
         }
 

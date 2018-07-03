@@ -55990,6 +55990,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
 
 
 
@@ -56017,6 +56022,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         this.link();
         this.fetchPosts();
         this.fetchUsers();
+        this.Preload();
     },
 
     methods: {
@@ -56074,6 +56080,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }).then(function (data) {
                 _this4.fetchUsers();
             });
+        },
+        Preload: function Preload() {
+            setTimeout(function () {
+                $("#preload_gif").hide();
+                $("#user_chat_class").show();
+            }, 2400);
         }
     }
 });
@@ -56999,9 +57011,15 @@ var render = function() {
           _vm._v(" "),
           _vm._m(0),
           _vm._v(" "),
+          _vm._m(1),
+          _vm._v(" "),
           _c(
             "div",
-            { staticClass: "row" },
+            {
+              staticClass: "row",
+              staticStyle: { display: "none" },
+              attrs: { id: "user_chat_class" }
+            },
             [
               _vm._l(_vm.posts, function(post) {
                 return post.user.id == _vm.user_id
@@ -57126,7 +57144,7 @@ var render = function() {
         ]
       ),
       _vm._v(" "),
-      _vm._m(1)
+      _vm._m(2)
     ])
   ])
 }
@@ -57137,6 +57155,22 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "row" }, [
       _c("div", { staticClass: "col-lg-12" }, [_c("hr")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "row", attrs: { id: "preload_gif" } }, [
+      _c("div", { staticClass: "offset-lg-4" }, [
+        _c("img", {
+          attrs: {
+            src: "http://localhost:8000/user/images/preload-1.gif",
+            height: "250px",
+            width: "215px"
+          }
+        })
+      ])
     ])
   },
   function() {
@@ -57668,6 +57702,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 												fetch('api/users').then(function (response) {
 																return response.json();
 												}).then(function (response) {
+																//console.log(response.data);
 																_this.users = response.data;
 												});
 								},
@@ -57733,6 +57768,14 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -57864,29 +57907,46 @@ var render = function() {
                 _vm._v(_vm._s(_vm.last_message))
               ]),
               _vm._v(" "),
-              _c("span", { staticClass: "time-active-1" }, [
-                _c("h6", [_vm._v("Active 1h ago")])
-              ])
-            ]
+              _vm.user.activate
+                ? [
+                    _c("span", { staticClass: "time-active-1" }, [
+                      _c("h6", [_vm._v("Active " + _vm._s(_vm.user.activate))])
+                    ])
+                  ]
+                : [
+                    _c("span", { staticClass: "time-active-1" }, [
+                      _c("h6", [_vm._v("Active Now")])
+                    ])
+                  ]
+            ],
+            2
           )
         ],
         1
       ),
       _vm._v(" "),
-      _vm._m(0)
+      _c(
+        "div",
+        { staticClass: "col-lg-4 col-md-4 col-8 text-right" },
+        [
+          _vm.user.activate_now
+            ? [
+                _c("h6", { staticClass: "time-active-2" }, [
+                  _vm._v("Active Now")
+                ])
+              ]
+            : [
+                _c("h6", { staticClass: "time-active-2" }, [
+                  _vm._v("Active " + _vm._s(_vm.user.activate))
+                ])
+              ]
+        ],
+        2
+      )
     ]
   )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-lg-4 col-md-4 col-8 text-right" }, [
-      _c("h6", { staticClass: "time-active-2" }, [_vm._v("Active 1h ago")])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
@@ -58779,6 +58839,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
 
 
 
@@ -58794,6 +58859,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             posts: [],
             user: [],
             item: [],
+            follower: 0,
+            following: 0,
             number_post: 0,
             image_status: false,
             avatar: ''
@@ -58808,6 +58875,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     created: function created() {
         this.fetchPosts();
         this.fetchUsers();
+        this.RenderFollower();
+        this.RenderFollowing();
+        this.Preload();
         this.avatar = this.auth_user.avatar;
     },
 
@@ -58815,15 +58885,35 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         fetchPosts: function fetchPosts() {
             var _this = this;
 
-            fetch('api/posts').then(function (res) {
-                return res.json();
+            axios.post('api/posts/user', {
+                'auth_user_id': this.auth_user_id
             }).then(function (res) {
-                //console.log(res.data);
-                _this.posts = res.data;
+                //console.log(res.data.data);
+                _this.posts = res.data.data;
+            });
+        },
+        RenderFollower: function RenderFollower() {
+            var _this2 = this;
+
+            axios.post('api/users/follower', {
+                'auth_user_id': this.auth_user_id
+            }).then(function (data) {
+                _this2.follower = data.data.length;
+                //console.log(data.data);
+            });
+        },
+        RenderFollowing: function RenderFollowing() {
+            var _this3 = this;
+
+            axios.post('api/users/following', {
+                'auth_user_id': this.auth_user_id
+            }).then(function (data) {
+                _this3.following = data.data.length;
+                //console.log(data.data);
             });
         },
         fetchUsers: function fetchUsers() {
-            var _this2 = this;
+            var _this4 = this;
 
             fetch('api/users').then(function (response) {
                 return response.json();
@@ -58831,14 +58921,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 var users = response.data;
                 var i;
                 for (i = 0; i < users.length; i++) {
-                    if (users[i].id == _this2.auth_user_id) {
-                        _this2.user = users[i];
+                    if (users[i].id == _this4.auth_user_id) {
+                        _this4.user = users[i];
                     }
                 }
             });
         },
         addLike: function addLike(this_post) {
-            var _this3 = this;
+            var _this5 = this;
 
             //alert(this_post.id);
 
@@ -58848,7 +58938,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 'post_id': this_post.id,
                 'user_id': auth_user
             }).then(function (data) {
-                _this3.fetchPosts();
+                _this5.fetchPosts();
             });
         },
         modalId: function modalId(post) {
@@ -58867,23 +58957,30 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.image_status = true;
         },
         changeProfile: function changeProfile() {
-            var _this4 = this;
+            var _this6 = this;
 
             var img = this.$refs.vueavatar.getImageScaled();
             axios.post('api/users', {
                 'auth_user_id': this.auth_user_id,
                 'image': img.toDataURL()
             }).then(function (data) {
-                _this4.avatar = img.toDataURL();
-                _this4.$toasted.show('Successfully changed profile image.', { type: 'success' }).goAway(3000);
+                _this6.avatar = img.toDataURL();
+                _this6.$toasted.show('Successfully changed profile image.', { type: 'success' }).goAway(3000);
             });
         },
         Logout: function Logout() {
             axios.post('/logout', {
                 'auth_user_id': this.auth_user_id
             }).then(function (data) {
+                //console.log(data);
                 location.reload();
             });
+        },
+        Preload: function Preload() {
+            setTimeout(function () {
+                $("#preload_gif").hide();
+                $("#user_chat_class").show();
+            }, 2400);
         }
     }
 
@@ -60122,6 +60219,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	props: {
@@ -60177,8 +60276,15 @@ var render = function() {
         expression: "scale"
       }
     ],
+    staticClass: "slider",
     style: { width: _vm.width + "px" },
-    attrs: { type: "range", min: _vm.min, max: _vm.max, step: _vm.step },
+    attrs: {
+      type: "range",
+      min: _vm.min,
+      max: _vm.max,
+      step: _vm.step,
+      id: "myRange"
+    },
     domProps: { value: _vm.scale },
     on: {
       __r: function($event) {
@@ -60345,7 +60451,7 @@ var render = function() {
                       "data-target": "#following"
                     }
                   },
-                  [_vm._v(_vm._s(_vm.user.following.length) + " followers")]
+                  [_vm._v(_vm._s(_vm.following) + " followers")]
                 ),
                 _vm._v(" "),
                 _c(
@@ -60358,7 +60464,7 @@ var render = function() {
                       "data-target": "#follower"
                     }
                   },
-                  [_vm._v(_vm._s(_vm.user.follower.length) + " following")]
+                  [_vm._v(_vm._s(_vm.follower) + " following")]
                 ),
                 _vm._v(" "),
                 _c("br"),
@@ -60413,62 +60519,70 @@ var render = function() {
           _vm._v(" "),
           _vm._m(5),
           _vm._v(" "),
+          _vm._m(6),
+          _vm._v(" "),
           _c(
             "div",
-            { staticClass: "row" },
+            {
+              staticClass: "row",
+              staticStyle: { display: "none" },
+              attrs: { id: "user_chat_class" }
+            },
             _vm._l(_vm.posts, function(value) {
-              return value.user.id == _vm.auth_user.id
-                ? _c("div", { staticClass: "col-lg-4 col-md-6 profile-mg" }, [
-                    _c("img", {
-                      staticClass: "post-img-1",
-                      attrs: {
-                        src: value.img,
-                        "data-toggle": "modal",
-                        "data-target": "#myModalImage" + value.id
-                      },
-                      on: {
-                        click: function($event) {
-                          _vm.modalId(value)
-                        }
+              return _c(
+                "div",
+                { staticClass: "col-lg-4 col-md-6 profile-mg" },
+                [
+                  _c("img", {
+                    staticClass: "post-img-1",
+                    attrs: {
+                      src: value.img,
+                      "data-toggle": "modal",
+                      "data-target": "#myModalImage" + value.id
+                    },
+                    on: {
+                      click: function($event) {
+                        _vm.modalId(value)
                       }
-                    }),
-                    _vm._v(" "),
-                    _c(
-                      "div",
-                      {
-                        staticClass: "modal fade",
-                        attrs: { id: "myModalImage" + value.id, role: "dialog" }
-                      },
-                      [
-                        _c("div", { staticClass: "modal-dialog modal-lg" }, [
-                          _c(
-                            "div",
-                            {
-                              staticClass: "modal-content",
-                              staticStyle: { "border-radius": "0px" }
-                            },
-                            [
-                              _c(
-                                "div",
-                                { staticClass: "modal-body" },
-                                [
-                                  _c("modal_image", {
-                                    attrs: {
-                                      item_value: value,
-                                      broj_like: value.likes.length,
-                                      auth_user_id: _vm.auth_user.id
-                                    }
-                                  })
-                                ],
-                                1
-                              )
-                            ]
-                          )
-                        ])
-                      ]
-                    )
-                  ])
-                : _vm._e()
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      staticClass: "modal fade",
+                      attrs: { id: "myModalImage" + value.id, role: "dialog" }
+                    },
+                    [
+                      _c("div", { staticClass: "modal-dialog modal-lg" }, [
+                        _c(
+                          "div",
+                          {
+                            staticClass: "modal-content",
+                            staticStyle: { "border-radius": "0px" }
+                          },
+                          [
+                            _c(
+                              "div",
+                              { staticClass: "modal-body" },
+                              [
+                                _c("modal_image", {
+                                  attrs: {
+                                    item_value: value,
+                                    broj_like: value.likes.length,
+                                    auth_user_id: _vm.auth_user.id
+                                  }
+                                })
+                              ],
+                              1
+                            )
+                          ]
+                        )
+                      ])
+                    ]
+                  )
+                ]
+              )
             })
           )
         ])
@@ -60528,7 +60642,7 @@ var render = function() {
         ]
       ),
       _vm._v(" "),
-      _vm._m(6)
+      _vm._m(7)
     ])
   ])
 }
@@ -60641,6 +60755,22 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "row" }, [
       _c("div", { staticClass: "col-lg-12" }, [_c("hr")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "row", attrs: { id: "preload_gif" } }, [
+      _c("div", { staticClass: "offset-lg-4" }, [
+        _c("img", {
+          attrs: {
+            src: "http://localhost:8000/user/images/preload-1.gif",
+            height: "250px",
+            width: "215px"
+          }
+        })
+      ])
     ])
   },
   function() {

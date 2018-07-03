@@ -146,4 +146,12 @@ class PostController extends Controller
         return $posts;
         //return PostResource::collection($posts);
     }
+
+    public function user(Request $request)
+    {
+        $user = User::where('id',$request->auth_user_id)->first();
+
+        $posts = $user->posts;
+        return PostResource::collection($posts);
+    }
 }

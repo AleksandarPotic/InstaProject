@@ -56,6 +56,7 @@
 	            fetch('api/users')
 					.then(response => response.json())
                     .then(response => {
+                        //console.log(response.data);
                         this.users = response.data;
                     })
 			},

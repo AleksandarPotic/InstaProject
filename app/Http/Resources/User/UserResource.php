@@ -24,7 +24,9 @@ class UserResource extends JsonResource
             'posts' => $this->posts,
             'follower' => $this->followers,
             'following' => $this->followings,
-            'messangers' => $this->messangers
+            'messangers' => $this->messangers,
+            'activate_now' => $this->activate,
+            'activate' => $this->updated_at->diffForHumans()
         ];
     }
 }

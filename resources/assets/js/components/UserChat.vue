@@ -1,6 +1,4 @@
 <template>
-
-
     <div id="user_chat" :class="message_status ? 'row mess-one' : 'row mess-one display_none'">
         <div class="col-lg-2 col-md-2 col-4">
             <router-link :to="{ path:'/chat/'+user.id+'/'+auth_user_id }" style="text-decoration: none;">
@@ -12,11 +10,21 @@
                 <span class="nick-name-messanger" style="color: #2b2b2b;"><b>{{ user.nick_name }}</b></span>
                 <br>
                 <span style="color: #2b2b2b;">{{ last_message }}</span>
-                <span class="time-active-1"><h6>Active 1h ago</h6></span>
+                <template v-if="user.activate">
+                    <span class="time-active-1"><h6>Active {{ user.activate }}</h6></span>
+                </template>
+                <template v-else>
+                    <span class="time-active-1"><h6>Active Now</h6></span>
+                </template>
             </router-link>
         </div>
         <div class="col-lg-4 col-md-4 col-8 text-right">
-            <h6 class="time-active-2">Active 1h ago</h6>
+            <template v-if="user.activate_now">
+                <h6 class="time-active-2">Active Now</h6>
+            </template>
+            <template v-else>
+                <h6 class="time-active-2">Active {{ user.activate }}</h6>
+            </template>
         </div>
     </div>
 </template>

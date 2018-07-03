@@ -6,6 +6,8 @@
           :max="max"
           :step="step"
           :style="{ width:width +'px'}"
+          class="slider"
+          id="myRange"
         />
 </template>
 <script >
